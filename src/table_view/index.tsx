@@ -1,57 +1,43 @@
-import { Button, Input, InputRef, Space, Table } from "antd";
+import { Button, Input, InputRef, Space, Table, Typography } from "antd";
 import qs from "qs";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Key, ReactNode, useEffect, useRef, useState } from "react";
 import { DataType, TableParams } from "./types";
 import type { ColumnType, TablePaginationConfig } from 'antd/es/table';
-import type { ColumnsType, FilterConfirmProps } from 'antd/es/table/interface';
+import type { ColumnFilterItem, ColumnsType, FilterConfirmProps } from 'antd/es/table/interface';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import Highlighter from 'react-highlight-words';
 
-interface Props {
+export interface HeaderView {
+    title: string
+    dataIndex: string
+    width?: string | number
+    fixed?: "left" | "right"
+    enableSort?: boolean
+    filters?: ColumnFilterItem[]
+    enableSearch?: boolean
+    render?: (value: any, record: any) => ReactNode
+
+
+    // sorter?: (a: any, b: any) => number
+    // filters?: FilterItem[]
+    // onFilter?: (value: boolean | Key, record: any) => boolean
 
 }
+interface Props {
+    headerView: HeaderView[]
+    dataList: any[]
+    loading: boolean
+    tableParams: TableParams
+    setTableParams: (params: TableParams) => void
+}
 type DataIndex = keyof DataType
+const { Text } = Typography
 const TableView: React.FC<Props> = (props) => {
-    const getRandomuserParams = (params: TableParams) => ({
-        results: params.pagination?.pageSize,
-        page: params.pagination?.current,
-        ...params,
-    });
+    const { headerView, dataList, loading, tableParams, setTableParams } = props
+
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
-
-    const [data, setData] = useState<DataType[]>();
-    const [loading, setLoading] = useState(false);
-    const [tableParams, setTableParams] = useState<TableParams>({
-        pagination: {
-            current: 1,
-            pageSize: 10,
-        },
-    });
-
-    const fetchData = () => {
-        setLoading(true);
-        fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
-            .then((res) => res.json())
-            .then(({ results }) => {
-                setData(results);
-                setLoading(false);
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: 200,
-                        // 200 is mock data, you should read it from server
-                        // total: data.totalCount,
-                    },
-                });
-            });
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [JSON.stringify(tableParams)]);
 
     const handleSearch = (
         selectedKeys: string[],
@@ -95,7 +81,7 @@ const TableView: React.FC<Props> = (props) => {
                     >
                         Reset
                     </Button>
-                    <Button
+                    {/* <Button
                         type="link"
                         size="small"
                         onClick={() => {
@@ -105,7 +91,7 @@ const TableView: React.FC<Props> = (props) => {
                         }}
                     >
                         Filter
-                    </Button>
+                    </Button> */}
                     <Button
                         type="link"
                         size="small"
@@ -153,11 +139,35 @@ const TableView: React.FC<Props> = (props) => {
     const handleDelete = (record: any) => {
         console.log(">> delete: ", record)
     }
+    const buildColumns = (headerView: HeaderView[]) => {
+        const handleSort = (a: any, b: any) => {
+            if (typeof a === "number") return a - b
+            if (typeof a === "string") return a.localeCompare(b)
+            if (typeof a === "object") return 0 // not supported yet
+            return 0
+        }
+
+
+        if (!headerView) return undefined
+        const columns = headerView.map(item => {
+            const temp = { ...item } as any
+            if (item.enableSort) temp.sort = handleSort
+            if (item.filters && item.filters.length !== 0) {
+                const dataIndex = item.dataIndex
+                const handleFilter = (value: boolean | Key, record: any) => {
+                    if (typeof value === "boolean") return false
+                    return record[dataIndex].indexOf(value.toString()) === 0
+                }
+                temp.onFilter = handleFilter
+            }
+            return temp
+        })
+    }
     const columns: ColumnsType<DataType> = [
         {
             title: 'Name',
             dataIndex: 'name',
-            sorter: true,
+            sorter: (a, b) => a.name.first.localeCompare(b.name.last),
             render: (name) => `${name.first} ${name.last}`,
             width: '20%',
         },
@@ -168,6 +178,7 @@ const TableView: React.FC<Props> = (props) => {
                 { text: 'Male', value: 'male' },
                 { text: 'Female', value: 'female' },
             ],
+            onFilter: (value: boolean | Key, record) => typeof value !== "boolean" ? record.gender.indexOf(value.toString()) === 0 : false,
             width: '20%',
         },
         {
@@ -198,25 +209,36 @@ const TableView: React.FC<Props> = (props) => {
         console.log(">> ", pagination)
         console.log(">> ", filters, typeof filters)
         console.log(">> ", sorter, typeof sorter)
-        setTableParams({
-            pagination,
-            filters,
-            ...sorter,
-        });
+        setTableParams({ ...tableParams, pagination })
+        // setTableParams({
+        //     pagination,
+        //     filters,
+        //     ...sorter,
+        // });
 
-        // `dataSource` is useless since `pageSize` changed
-        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-            setData([]);
-        }
+        // // `dataSource` is useless since `pageSize` changed
+        // if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+        //     setData([]);
+        // }
     };
     return <>
         <Table
             columns={columns}
             rowKey={(record) => record.login.uuid}
-            dataSource={data}
+            dataSource={dataList}
             pagination={tableParams.pagination}
             loading={loading}
             onChange={handleTableChange}
+            summary={(pageData) => {
+                return <Table.Summary.Row>
+                    <Table.Summary.Cell index={0}>
+                        <Text strong>Total records:</Text>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1} colSpan={2}>
+                        <Text strong>200</Text>
+                    </Table.Summary.Cell>
+                </Table.Summary.Row>
+            }}
         />
     </>
 }
