@@ -1,14 +1,9 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  /* margin: 0 auto;
+  padding: 2rem; */
 }
-.container {
-  width: auto;
-  border: 1px solid rgb(196, 195, 195);
-  padding: 16px;
-  border-radius: 8px;
-  height: auto;
+.wrapper {
+  width: min(900px, 100% - 3rem);
+  margin-inline: auto;
 }
 

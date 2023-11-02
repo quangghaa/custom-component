@@ -1,104 +1,37 @@
-import { Key, ReactNode, useEffect, useState } from 'react';
 import './App.css'
-import TableView, { HeaderView } from './table_view'
-import { DataType, TableParams } from './table_view/types';
-import qs from "qs"
-import { ColumnsType } from 'antd/es/table';
-import { Space } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-
+import TableView, { DataType } from './table_view';
+import HeaderView from './table_view/HeadView';
+import ItemViewV2 from './table_view/ItemView';
 function App() {
-  const [data, setData] = useState<DataType[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const [tableParams, setTableParams] = useState<TableParams>({
-    pagination: {
-      current: 1,
-      pageSize: 10,
-    },
-  });
-
-  const getRandomuserParams = (params: TableParams) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params,
-  });
-  const fetchData = () => {
-    setLoading(true);
-    fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
-      .then((res) => res.json())
-      .then(({ results }) => {
-        setData(results);
-        setLoading(false);
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: 200,
-            // 200 is mock data, you should read it from server
-            // total: data.totalCount,
-          },
-        });
-      });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [JSON.stringify(tableParams)]);
-
-  const handleView = (record: any) => {
-    console.log(">> view: ", record)
+  const dataIndex = ["name", "poles", "podiums", "wins", "career points", "championships"]
+  const data = [
+    ["Max Verstappen", "22", "80", "37", "2080.5", "2"],
+    ["Lewis Hamilton", "101", "101", "100", "4050", "7"],
+    ["Michael Schumacher", "68", "155", "91", "1566", "7"],
+    ["Juan Manuel Fangio", "29", "35", "24", "277.64", "5"],
+    ["Alain Prost", "33", "106", "51", "798.5", "4"],
+    ["Sebastian Vettel", "57", "122", "53", "2847", "4"],
+    ["Ayrton Senna", "65", "80", "41", "614", "3"],
+    ["Nelson Piquet", "24", "60", "23", "485.5", "3"],
+    ["Jack Brabham", "13", "31", "14", "261", "3"],
+    ["Niki Lauda", "24", "54", "25", "420.5", "3"],
+    ["Jackie Stewart", "17", "43", "27", "360", "3"],
+    ["Alberto Ascari", "14", "17", "13", "107.64", "2"],
+    ["Graham Hill", "13", "36", "14", "289", "2"],
+    ["Mika Häkkinen", "26", "51", "20", "420", "2"],
+  ];
+  const dataList: DataType = {
+    dataIndex: dataIndex,
+    data: data
   }
-  const handleEdit = (record: any) => {
-    console.log(">> edit: ", record)
-  }
-  const handleDelete = (record: any) => {
-    console.log(">> delete: ", record)
-  }
-  const headerView: HeaderView[] = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      width: "20%",
-      enableSort: true,
-    },
-    {
-      title: 'Gender',
-      dataIndex: 'gender',
-      width: '20%',
-      filters: [
-        { text: 'Male', value: 'male' },
-        { text: 'Female', value: 'female' },
-      ],
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      enableSearch: true,
-    },
-    {
-      title: 'Action',
-      dataIndex: '#',
-      width: 200,
-      fixed: 'right',
-      render: (_: any, record: DataType) => (
-        <Space size="middle">
-          <a onClick={() => handleView(record)}><EyeOutlined /></a>
-          <a onClick={() => handleEdit(record)}><EditOutlined /></a>
-          <a onClick={() => handleDelete(record)}><DeleteOutlined /></a>
-        </Space>
-      ),
-    },
-  ]
 
   return (
-    <div className='container'>
+    <div className='wrapper'>
+      < h1 > Responsive Tables</h1 >
       <TableView
-        headerView={headerView}
-        dataList={data}
-        loading={loading}
-        tableParams={tableParams} // for paging, sorting and filtering
-        setTableParams={setTableParams}
+        headerView={<HeaderView />}
+        ItemView={ItemViewV2}
+        dataList={dataList}
       />
     </div>
   )

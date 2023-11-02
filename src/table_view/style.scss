@@ -1,0 +1,42 @@
+.table-view {
+    // table {
+    //     font-family: arial, sans-serif;
+    //     border-collapse: collapse;
+    //     width: 100%;
+    // }
+    
+    // td,
+    // th {
+    //     border: 1px solid #dddddd;
+    //     text-align: left;
+    //     padding: 8px;
+    // }
+    
+    // tr:nth-child(even) {
+    //     background-color: #dddddd;
+    // }
+
+    table {
+        width: 100%;
+        background: white;
+        color: black;
+        border-collapse: collapse;
+
+        max-height: 500px;
+            overflow: hidden;
+
+        // .table-body {
+        //     max-height: 500px;
+        //     overflow: hidden;
+        // }
+    }
+    caption {
+        padding: 1rem;
+        text-align: left;
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 650px) {
+        
+    }
+}

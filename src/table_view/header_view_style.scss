@@ -1,0 +1,29 @@
+.table-head {
+    th {
+        // padding: 1rem;
+        font-size: 14px;
+        padding: 12px 8px;
+        text-align: left;
+        background-color: #fafafa;
+        border-top-right-radius: 8px;
+        border-top-right-radius: 8px;
+        border-bottom: 1px solid #f0f0f0;
+        position: relative;
+    }
+    th:not(:first-child)::before {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 1px;
+        height: 1.6em;
+        background-color: #f0f0f0;
+        transform: translateY(-50%);
+        transition: background-color 0.2s;
+        content: "";
+    }
+    @media (max-width: 650px) {
+        th {
+            display: none;
+        }
+    }
+}
