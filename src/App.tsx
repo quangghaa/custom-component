@@ -5,7 +5,7 @@ import ItemViewV2 from './table_view/ItemView';
 function App() {
   const dataIndex = ["name", "poles", "podiums", "wins", "career points", "championships"]
   const data = [
-    ["Max Verstappen", "22", "80", "37", "2080.5", "2"],
+    ["Max Verstappen Max Verstappen Max Verstappen Max Verstappen Max Verstappen", "22 Max Verstappen Max ", "80", "37", "2080.5", "2"],
     ["Lewis Hamilton", "101", "101", "100", "4050", "7"],
     ["Michael Schumacher", "68", "155", "91", "1566", "7"],
     ["Juan Manuel Fangio", "29", "35", "24", "277.64", "5"],
@@ -20,6 +20,7 @@ function App() {
     ["Graham Hill", "13", "36", "14", "289", "2"],
     ["Mika Häkkinen", "26", "51", "20", "420", "2"],
   ];
+  const emptyData: any[] = []
   const dataList: DataType = {
     dataIndex: dataIndex,
     data: data

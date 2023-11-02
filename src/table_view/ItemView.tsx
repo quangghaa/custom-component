@@ -5,12 +5,15 @@ export interface ItemViewProps {
     dataIndex: string[]
     dataRow: string[]
 }
-const ItemViewV2: React.FC<ItemViewProps> = (props) => {
+const ItemView: React.FC<ItemViewProps> = (props) => {
     const { dataIndex, dataRow } = props
-    return <tr className="item-view-row">
+    const onRowClick = (item: any) => {
+        window.alert(`${item}`)
+    }
+    return <tr className="item-view-row" onClick={() => onRowClick(dataRow)}>
         {dataRow.map((item, index) => (
-            <td data-cell={dataIndex[index]} key={index}>{item}</td>
+            <td data-cell={dataIndex[index]} className={`col-${dataIndex[index]}`} key={index}>{item}</td>
         ))}
     </tr>
 }
-export default ItemViewV2
+export default ItemView
