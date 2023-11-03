@@ -1,10 +1,12 @@
 import React, { ComponentType, ReactNode } from "react";
 import "./style.scss";
-import { ItemViewProps } from "./ItemView";
-
 export interface DataType {
     dataIndex: string[]
     data: string[][]
+}
+export interface ItemViewProps {
+    dataIndex: string[]
+    dataRow: string[]
 }
 const EmptyTableBody = (props: any) => {
     const { colSpan } = props

@@ -1,27 +1,118 @@
-# React + TypeScript + Vite
+# Custom components
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project provide a simple flexible table component
 
-Currently, two official plugins are available:
+Requirement:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   Nodejs >= 18
+-   Vite + SWC project
 
-## Expanding the ESLint configuration
+## Example of use:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Use with built in HeaderView and ItemView component:
 
-- Configure the top-level `parserOptions` property like this:
+-   Import `HeaderView` and `ItemView` components
 
 ```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+import HeaderView from "./table_view/HeadView";
+import ItemView from "./table_view/ItemView";
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+-   Define `dataList` object of type `DataType` from `table_view`:
+
+```js
+const dataIndex = ["name", "poles", "podiums", "wins", "career points", "championships"];
+const data = [
+    ["Max Verstappen", "22", "80", "37", "2080.5", "2"],
+    ["Lewis Hamilton", "101", "101", "100", "4050", "7"],
+    ["Michael Schumacher", "68", "155", "91", "1566", "7"],
+    ["Juan Manuel Fangio", "29", "35", "24", "277.64", "5"],
+];
+const dataList: DataType = {
+    dataIndex: dataIndex,
+    data: data,
+};
+```
+
+-   Using `TableView`:
+
+```js
+<TableView headerView={<HeaderView />} ItemView={ItemView} dataList={dataList} />
+```
+
+Use with custom HeaderView and ItemView component:
+
+-   Define your `HeaderView` component:
+
+```js
+interface Props {}
+const HeaderView: React.FC<Props> = (props) => {
+    return (
+        <>
+            <thead className="table-head">
+                <tr>
+                    <th>Name</th>
+                    <th>Poles</th>
+                    <th>Podiums</th>
+                    <th>Wins</th>
+                    <th>Career points</th>
+                    <th>Championships</th>
+                </tr>
+            </thead>
+        </>
+    );
+};
+export default HeaderView;
+```
+
+-   Define `ItemView` component:
+
+*   Import `ItemViewProps` from `table_view` component
+
+```js
+import { ItemViewProps } from ".";
+```
+
+-   Create `ItemView` component:
+
+```js
+const ItemView: React.FC<ItemViewProps> = (props) => {
+    const { dataIndex, dataRow } = props;
+    const onRowClick = (item: any) => {
+        window.alert(`${item}`);
+    };
+    return (
+        <tr className="item-view-row" onClick={() => onRowClick(dataRow)}>
+            {dataRow.map((item, index) => (
+                <td data-cell={dataIndex[index]} className={`col-${dataIndex[index]}`} key={index}>
+                    {item}
+                </td>
+            ))}
+        </tr>
+    );
+};
+export default ItemView;
+```
+
+-   Create `dataList` object data:
+
+```js
+const dataIndex = ["name", "poles", "podiums", "wins", "career points", "championships"];
+const data = [
+    ["Max Verstappen", "22", "80", "37", "2080.5", "2"],
+    ["Lewis Hamilton", "101", "101", "100", "4050", "7"],
+    ["Michael Schumacher", "68", "155", "91", "1566", "7"],
+    ["Juan Manuel Fangio", "29", "35", "24", "277.64", "5"],
+];
+const dataList: DataType = {
+    dataIndex: dataIndex,
+    data: data,
+};
+```
+
+-   Using `TableView` component:
+
+```js
+<TableView headerView={<HeaderView />} ItemView={ItemView} dataList={dataList} />
+```
+

@@ -1,11 +1,11 @@
 import './App.css'
 import TableView, { DataType } from './table_view';
 import HeaderView from './table_view/HeadView';
-import ItemViewV2 from './table_view/ItemView';
+import ItemView from './table_view/ItemView';
 function App() {
   const dataIndex = ["name", "poles", "podiums", "wins", "career points", "championships"]
   const data = [
-    ["Max Verstappen Max Verstappen Max Verstappen Max Verstappen Max Verstappen", "22 Max Verstappen Max ", "80", "37", "2080.5", "2"],
+    ["Max Verstappen", "22", "80", "37", "2080.5", "2"],
     ["Lewis Hamilton", "101", "101", "100", "4050", "7"],
     ["Michael Schumacher", "68", "155", "91", "1566", "7"],
     ["Juan Manuel Fangio", "29", "35", "24", "277.64", "5"],
@@ -31,7 +31,7 @@ function App() {
       < h1 > Responsive Tables</h1 >
       <TableView
         headerView={<HeaderView />}
-        ItemView={ItemViewV2}
+        ItemView={ItemView}
         dataList={dataList}
       />
     </div>

@@ -1,10 +1,7 @@
 import React from "react";
 import "./item_view_style.scss";
+import { ItemViewProps } from ".";
 
-export interface ItemViewProps {
-    dataIndex: string[]
-    dataRow: string[]
-}
 const ItemView: React.FC<ItemViewProps> = (props) => {
     const { dataIndex, dataRow } = props
     const onRowClick = (item: any) => {
