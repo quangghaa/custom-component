@@ -1,4 +1,4 @@
-# Custom components
+# Flexible React Table Component
 
 This project provide a simple flexible table component
 
