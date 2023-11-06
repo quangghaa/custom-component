@@ -1,6 +1,6 @@
 import React from "react";
 import "./item_view_style.scss";
-import { ItemViewProps } from ".";
+import { ItemViewProps } from "./TableView";
 
 const ItemView: React.FC<ItemViewProps> = (props) => {
     const { dataIndex, dataRow } = props

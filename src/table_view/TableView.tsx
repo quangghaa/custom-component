@@ -1,5 +1,5 @@
 import React, { ComponentType, ReactNode } from "react";
-import "./style.scss";
+import "./table_view_style.scss";
 export interface DataType {
     dataIndex: string[]
     data: string[][]
@@ -21,7 +21,7 @@ interface Props {
     ItemView: ComponentType<ItemViewProps>
     dataList: DataType
 }
-const TableView: React.FC<Props> = (props: any) => {
+export const TableView: React.FC<Props> = (props: any) => {
     const { headerView, ItemView, dataList } = props
     const { dataIndex, data } = dataList
 
@@ -29,7 +29,7 @@ const TableView: React.FC<Props> = (props: any) => {
         <div className="table-view">
             <table>
                 {headerView}
-                <tbody className="table-body">
+                {/* <tbody className="table-body">
                     {data.length === 0 &&
                         <EmptyTableBody colSpan={dataIndex.length} />}
                     {data.map((item: any, index: any) => (
@@ -41,10 +41,9 @@ const TableView: React.FC<Props> = (props: any) => {
                         <td className="" >Total record</td>
                         <td className="" colSpan={dataIndex.length - 1}>{data.length}</td>
                     </tr>
-                </tfoot>
+                </tfoot> */}
             </table>
         </div>
 
     )
 }
-export default TableView

@@ -1,7 +1,9 @@
 import './App.css'
-import TableView, { DataType } from './table_view';
+import { TableView } from '..';
 import HeaderView from './table_view/HeadView';
 import ItemView from './table_view/ItemView';
+import { DataType } from './table_view/TableView';
+import { ColumnType } from './table_view/types';
 function App() {
   const dataIndex = ["name", "poles", "podiums", "wins", "career points", "championships"]
   const data = [
@@ -20,17 +22,64 @@ function App() {
     ["Graham Hill", "13", "36", "14", "289", "2"],
     ["Mika Häkkinen", "26", "51", "20", "420", "2"],
   ];
-  const emptyData: any[] = []
   const dataList: DataType = {
     dataIndex: dataIndex,
     data: data
   }
 
+  // Define header view
+  interface UserType {
+    name: string
+    age: number
+  }
+  const columns: ColumnType<UserType>[] = [
+    {
+      title: "NameA",
+      dataIndex: "name",
+      key: "name",
+      // width: 300,
+    },
+    {
+      title: "Poles",
+      dataIndex: "poles",
+      key: "poles",
+      // width: 200,
+    },
+    // {
+    //   title: "Podiums",
+    //   dataIndex: "podiums",
+    //   key: "podiums",
+    //   width: 200,
+    // },
+    // {
+    //   title: "Wins",
+    //   dataIndex: "wins",
+    //   key: "wins",
+    //   width: 200,
+    // },
+    // {
+    //   title: "Career points",
+    //   dataIndex: "careerPoints",
+    //   key: "careerPoints",
+    //   width: 300,
+    // },
+    // {
+    //   title: "Championships",
+    //   dataIndex: "championships",
+    //   key: "championships",
+    //   width: 300,
+    // },
+  ]
+
+  const DemoHeaderView = () => (
+    <HeaderView columns={columns} />
+  )
+
   return (
     <div className='wrapper'>
       < h1 > Responsive Tables</h1 >
       <TableView
-        headerView={<HeaderView />}
+        headerView={<DemoHeaderView />}
         ItemView={ItemView}
         dataList={dataList}
       />
