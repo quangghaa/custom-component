@@ -2,15 +2,34 @@
     position: sticky;
     top: 0;
 
+    .text-center {
+        text-align: center;
+    }
+
     th {
         font-size: 14px;
         padding: 12px 8px;
         text-align: left;
         background-color: #fafafa;
-        // border-top-right-radius: 8px;
-        // border-top-right-radius: 8px;
         border-bottom: 1px solid #f0f0f0;
         position: relative;
+
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+
+            &__title {
+                flex-grow: 1;
+            }
+
+            &__icons {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+        }
     }
     th:not(:first-child)::before {
         position: absolute;
@@ -20,8 +39,15 @@
         height: 1.6em;
         background-color: #f0f0f0;
         transform: translateY(-50%);
-        transition: background-color 0.2s;
+        // transition: background-color 0.2s;
         content: "";
+    }
+    .sorter-cell {
+        transition: background-color 0.2s;
+    }
+    .sorter-cell:hover {
+        cursor: pointer;
+        background-color: #f0f0f0;
     }
     @media (max-width: 650px) {
         th {

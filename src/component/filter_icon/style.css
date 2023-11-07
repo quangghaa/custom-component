@@ -1,0 +1,18 @@
+.filter-icon {
+    width: fit-content;
+    height: 30px;
+    width: 20px;
+    color: rgba(0,0,0,.29);
+    transition: color .3s;
+    transition: background-color .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.filter-icon:hover {
+    background-color: rgba(197, 196, 196, 0.29);
+    cursor: pointer;
+}

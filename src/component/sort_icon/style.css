@@ -1,0 +1,18 @@
+.sort-icon {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.sort-icon span {
+    height: 12px;
+    width: 12px;
+    display: flex;
+    align-items: center;
+    color: rgba(0,0,0,.29);
+    transition: color .3s;
+}
+
+.sort-icon span:first-child {
+    transform: translateY(3px);
+}

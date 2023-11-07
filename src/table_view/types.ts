@@ -11,7 +11,7 @@ export type ColumnType<T> = {
     width?: number | string
     filters?: FilterType[]
     onFilter?: (value: any, record: T) => boolean
-    sorter?: (a: T, b: T) => boolean
-    children?: ColumnType<T>
+    sorter?: (a: T, b: T) => number
+    children?: ColumnType<T>[]
     render?: (value: any, record: T, index: number) => ReactNode
 } 

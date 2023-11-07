@@ -28,47 +28,89 @@ function App() {
   }
 
   // Define header view
+  type Fullname = {
+    firstName: string
+    lastName: string
+  }
   interface UserType {
-    name: string
+    fullname: Fullname
     age: number
   }
   const columns: ColumnType<UserType>[] = [
     {
-      title: "NameA",
-      dataIndex: "name",
-      key: "name",
-      // width: 300,
+      title: "Full name",
+      children: [
+        // {
+        //   title: "First Name",
+        //   children: [
+        //     {
+        //       title: "Col A",
+        //       dataIndex: "colA",
+        //       key: "colA",
+        //       width: "10%",
+        //     },
+        //     {
+        //       title: "Col B",
+        //       dataIndex: "colB",
+        //       key: "colB",
+        //       width: "10%",
+        //     }
+        //   ]
+        // },
+        {
+          title: "First Name",
+          dataIndex: "firstName",
+          key: "firstName",
+          width: "20%",
+          sorter: (a, b) => a.fullname.firstName.localeCompare(b.fullname.firstName)
+        },
+        {
+          title: "Last Name",
+          dataIndex: "lastName",
+          key: "lastName",
+          width: "20%",
+        },
+      ]
     },
     {
       title: "Poles",
       dataIndex: "poles",
       key: "poles",
-      // width: 200,
     },
-    // {
-    //   title: "Podiums",
-    //   dataIndex: "podiums",
-    //   key: "podiums",
-    //   width: 200,
-    // },
-    // {
-    //   title: "Wins",
-    //   dataIndex: "wins",
-    //   key: "wins",
-    //   width: 200,
-    // },
-    // {
-    //   title: "Career points",
-    //   dataIndex: "careerPoints",
-    //   key: "careerPoints",
-    //   width: 300,
-    // },
-    // {
-    //   title: "Championships",
-    //   dataIndex: "championships",
-    //   key: "championships",
-    //   width: 300,
-    // },
+    {
+      title: "Podiums",
+      dataIndex: "podiums",
+      key: "podiums",
+      // children: [
+      //   {
+      //     title: "Col D",
+      //     dataIndex: "colD",
+      //     key: "colD",
+      //     width: "10%",
+      //   },
+      //   {
+      //     title: "Col E",
+      //     dataIndex: "colE",
+      //     key: "colE",
+      //     width: "10%",
+      //   },
+      // ]
+    },
+    {
+      title: "Wins",
+      dataIndex: "wins",
+      key: "wins",
+    },
+    {
+      title: "Career points",
+      dataIndex: "careerPoints",
+      key: "careerPoints",
+    },
+    {
+      title: "Championships",
+      dataIndex: "championships",
+      key: "championships",
+    },
   ]
 
   const DemoHeaderView = () => (

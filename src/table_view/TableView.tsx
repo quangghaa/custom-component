@@ -25,11 +25,15 @@ export const TableView: React.FC<Props> = (props: any) => {
     const { headerView, ItemView, dataList } = props
     const { dataIndex, data } = dataList
 
+    function handleSort() {
+
+    }
+
     return (
         <div className="table-view">
             <table>
                 {headerView}
-                {/* <tbody className="table-body">
+                <tbody className="table-body">
                     {data.length === 0 &&
                         <EmptyTableBody colSpan={dataIndex.length} />}
                     {data.map((item: any, index: any) => (
@@ -41,7 +45,7 @@ export const TableView: React.FC<Props> = (props: any) => {
                         <td className="" >Total record</td>
                         <td className="" colSpan={dataIndex.length - 1}>{data.length}</td>
                     </tr>
-                </tfoot> */}
+                </tfoot>
             </table>
         </div>
 
