@@ -1,12 +1,16 @@
 import { AscendingSvg, DescendingSvg } from "../../svg/icon"
 import "./style.css"
-const SortIcon = () => {
+const SortIcon = (props: any) => {
+    const { sortOrder } = props
+    const ascendingHighlightCls = sortOrder === "ascending" ? "sort-icon--highlight" : ""
+    const descendingHighlightCls = sortOrder === "descending" ? "sort-icon--highlight" : ""
+
     return (
         <div className="sort-icon">
-            <span>
+            <span className={ascendingHighlightCls}>
                 <AscendingSvg />
             </span>
-            <span>
+            <span className={descendingHighlightCls}>
                 <DescendingSvg />
             </span>
         </div>

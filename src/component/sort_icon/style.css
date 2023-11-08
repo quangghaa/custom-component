@@ -13,6 +13,10 @@
     transition: color .3s;
 }
 
+.sort-icon--highlight {
+    color: #1677ff!important;
+}
+
 .sort-icon span:first-child {
     transform: translateY(3px);
 }

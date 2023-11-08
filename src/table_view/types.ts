@@ -1,5 +1,7 @@
 import { ReactNode } from "react"
 
+export type SortOrder = "ascending" | "descending" | null
+
 type FilterType = {
     text: string
     value: string 

@@ -1,13 +1,10 @@
-import React, { ComponentType, ReactNode } from "react";
+import React, { useState } from "react";
 import "./table_view_style.scss";
-export interface DataType {
-    dataIndex: string[]
-    data: string[][]
-}
-export interface ItemViewProps {
-    dataIndex: string[]
-    dataRow: string[]
-}
+import { ColumnType, SortOrder } from "./types";
+import HeaderView from "./HeadView";
+import ItemView from "./ItemView";
+import { hasChildren } from "./common"
+
 const EmptyTableBody = (props: any) => {
     const { colSpan } = props
     return (
@@ -16,34 +13,70 @@ const EmptyTableBody = (props: any) => {
         </tr>
     )
 }
+
+type ScrollType = { x: number | string, y: number }
 interface Props {
-    headerView: ReactNode
-    ItemView: ComponentType<ItemViewProps>
-    dataList: DataType
+    columns: ColumnType<any>[]
+    data: any[]
+    scroll?: ScrollType
 }
 export const TableView: React.FC<Props> = (props: any) => {
-    const { headerView, ItemView, dataList } = props
-    const { dataIndex, data } = dataList
+    const { columns, data, scroll } = props
+    const [dataView, setDataView] = useState<any[]>(data)
 
-    function handleSort() {
+    const tableSizeCls: any = { x: "100%", y: "auto" } // default width and height
+    if (scroll) {
+        const { x, y } = scroll
+        if (typeof x === "number") tableSizeCls.x = x + "px"
+        if (typeof x === "string") tableSizeCls.x = x
+        if (typeof y === "number") tableSizeCls.y = y + "px"
+    }
 
+    function getTotalColumns(columns: ColumnType<any>[], remainingSum: number = 0) {
+        let sum = remainingSum
+        columns.forEach(col => {
+            if (!hasChildren(col)) {
+                sum++
+            } else {
+                sum += getTotalColumns(col.children!, 0)
+            }
+        })
+        return sum
+    }
+
+    function handleSort(direction: SortOrder, sorter: (a: any, b: any) => number) {
+        if (direction === null) {
+            setDataView(data)
+        } else {
+            const temp = [...dataView]
+            const result = direction === "ascending" ? temp.sort(sorter) : temp.sort(sorter).reverse()
+            setDataView(result)
+        }
     }
 
     return (
-        <div className="table-view">
-            <table>
-                {headerView}
+        <div className="table-view" style={{ maxHeight: tableSizeCls.y }}>
+            <table style={{ width: tableSizeCls.x }}>
+                <HeaderView
+                    columns={columns}
+                    handleSort={handleSort}
+                />
                 <tbody className="table-body">
                     {data.length === 0 &&
-                        <EmptyTableBody colSpan={dataIndex.length} />}
-                    {data.map((item: any, index: any) => (
-                        <ItemView key={index} dataIndex={dataIndex} dataRow={item} />
+                        <EmptyTableBody colSpan={columns.length} />}
+                    {dataView.map((row: any, index: any) => (
+                        <ItemView
+                            columns={columns}
+                            row={row}
+                            key={index}
+                            index={index}
+                        />
                     ))}
                 </tbody>
                 <tfoot className="table-foot">
                     <tr>
                         <td className="" >Total record</td>
-                        <td className="" colSpan={dataIndex.length - 1}>{data.length}</td>
+                        <td className="" colSpan={getTotalColumns(columns) - 1}>{data.length}</td>
                     </tr>
                 </tfoot>
             </table>

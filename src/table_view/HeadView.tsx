@@ -1,14 +1,17 @@
-import React, { ReactNode } from "react";
+import React, { useRef } from "react";
 import "./header_view_style.scss";
-import { ColumnType } from "./types";
+import { ColumnType, SortOrder } from "./types";
 import SortIcon from "../component/sort_icon/SortIcon";
 import FilterIcon from "../component/filter_icon/FilterIcon";
+import { hasChildren } from "./common";
 
 interface Props {
     columns: ColumnType<any>[]
+    handleSort: (direction: SortOrder, sorter: (a: any, b: any) => number) => void
 }
 const HeaderView: React.FC<Props> = (props) => {
-    const { columns } = props
+    const { columns, handleSort } = props
+    const sortClicked = useRef(0)
 
     function getMaxDepth<T>(columns: ColumnType<T>[]): number {
         let maxDepth = 1; // Initialize with the minimum depth, which is 1 for the root columns.
@@ -46,11 +49,7 @@ const HeaderView: React.FC<Props> = (props) => {
         return { colSpan, rowSpan };
     }
 
-    function hasChildren<T>(col: ColumnType<T>): boolean {
-        return !(col.children === undefined || (Array.isArray(col.children) && col.children.length === 0))
-    }
-
-    function renderTableView(columns: ColumnType<any>[]) {
+    function renderHeaderView(columns: ColumnType<any>[]) {
         const maxDepth = getMaxDepth(columns)
         const textAlignCenterCls = "text-center "
         const sorterCls = "sorter-cell "
@@ -79,6 +78,7 @@ const HeaderView: React.FC<Props> = (props) => {
                         key={col.key || `th-${colIndex}`}
                         {...getColAndRowSpan(col, index, maxDepth)}
                         style={col.width ? { width: col.width } : {}}
+                        onClick={col.sorter ? (e) => onSort(e, col.sorter!) : undefined}
                     >
                         <div className="content">
                             <div className="content__title">
@@ -86,7 +86,7 @@ const HeaderView: React.FC<Props> = (props) => {
                             </div>
                             {!hasChildren(col) &&
                                 <div className="content__icons">
-                                    {col.sorter && <SortIcon />}
+                                    {col.sorter && <SortIcon sortOrder={(sortClicked.current === 0) ? null : (sortClicked.current === 1 ? "ascending" : "descending")} />}
                                     {col.filters && <FilterIcon />}
                                 </div>
                             }
@@ -99,9 +99,31 @@ const HeaderView: React.FC<Props> = (props) => {
         ))
     }
 
+    function onSort(e: any, sorter: (a: any, b: any) => number) {
+        e.stopPropagation()
+        sortClicked.current = sortClicked.current < 2 ? sortClicked.current + 1 : 0
+        switch (sortClicked.current) {
+            case 0:
+                console.log(">> direction: null")
+                handleSort(null, sorter)
+                break
+            case 1:
+                console.log(">> direction: ascending")
+                handleSort("ascending", sorter)
+                break
+            case 2:
+                console.log(">> direction: descending")
+                handleSort("descending", sorter)
+                break
+            default:
+                break
+        }
+
+    }
+
     return <>
         <thead className="table-head">
-            {renderTableView(columns)}
+            {renderHeaderView(columns)}
         </thead >
     </>
 }
