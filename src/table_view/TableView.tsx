@@ -54,15 +54,32 @@ export const TableView: React.FC<Props> = (props: any) => {
         }
     }
 
+    function handleFilter(selectedValues: string[], onFilter?: (value: any, record: any) => boolean, sorter?: (a: any, b: any) => number) {
+        if (!onFilter) return
+        let filterList: any[] = []
+        if (selectedValues.length === 0) {
+            filterList = data
+        } else {
+            for (const selectedValue of selectedValues) {
+                for (const item of data) {
+                    if (onFilter(selectedValue, item)) filterList.push(item)
+                }
+            }
+        }
+
+        setDataView(filterList)
+    }
+
     return (
         <div className="table-view" style={{ maxHeight: tableSizeCls.y }}>
             <table style={{ width: tableSizeCls.x }}>
                 <HeaderView
                     columns={columns}
                     handleSort={handleSort}
+                    handleFilter={handleFilter}
                 />
                 <tbody className="table-body">
-                    {data.length === 0 &&
+                    {dataView.length === 0 &&
                         <EmptyTableBody colSpan={columns.length} />}
                     {dataView.map((row: any, index: any) => (
                         <ItemView

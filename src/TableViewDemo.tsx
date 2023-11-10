@@ -25,7 +25,9 @@ export const columns: ColumnType<UserType>[] = [
                 key: "firstName",
                 width: "20%",
                 sorter: (a, b) => a.firstName!.localeCompare(b.firstName!),
-                render: (value: any) => <a href="#" style={{ color: "green" }}>{value}</a>
+                render: (value: any) => <a href="#" style={{ color: "green" }}>{value}</a>,
+                filters: [{ text: "Alain", value: "alain" }, { text: "Max", value: "max" }],
+                onFilter: (value, record) => record.firstName ? record.firstName.toLowerCase().includes(value.toLowerCase()) : false
             },
             {
                 title: "Last Name",

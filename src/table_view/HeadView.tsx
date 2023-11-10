@@ -8,9 +8,10 @@ import { hasChildren } from "./common";
 interface Props {
     columns: ColumnType<any>[]
     handleSort: (direction: SortOrder, sorter: (a: any, b: any) => number) => void
+    handleFilter: (selectedValues: string[], onFilter?: (value: any, record: any) => boolean, sorter?: (a: any, b: any) => number) => void
 }
 const HeaderView: React.FC<Props> = (props) => {
-    const { columns, handleSort } = props
+    const { columns, handleSort, handleFilter } = props
     const sortClicked = useRef(0)
 
     function getMaxDepth<T>(columns: ColumnType<T>[]): number {
@@ -69,6 +70,7 @@ const HeaderView: React.FC<Props> = (props) => {
             <tr key={`row-${index}`}>
                 {row.map((col, colIndex) => (
                     <th
+                        id={col.dataIndex || `th-${colIndex}`}
                         className={
                             `
                             ${hasChildren(col) ? textAlignCenterCls : ""}
@@ -87,7 +89,15 @@ const HeaderView: React.FC<Props> = (props) => {
                             {!hasChildren(col) &&
                                 <div className="content__icons">
                                     {col.sorter && <SortIcon sortOrder={(sortClicked.current === 0) ? null : (sortClicked.current === 1 ? "ascending" : "descending")} />}
-                                    {col.filters && <FilterIcon />}
+                                    {col.filters &&
+                                        <FilterIcon
+                                            filters={col.filters}
+                                            onFilter={col.onFilter}
+                                            sorter={col.sorter}
+                                            handleOk={handleOk}
+                                            handleReset={handleReset}
+                                        />
+                                    }
                                 </div>
                             }
 
@@ -119,6 +129,14 @@ const HeaderView: React.FC<Props> = (props) => {
                 break
         }
 
+    }
+
+    function handleOk(selectedValues: string[], onFilter?: (value: any, record: any) => boolean, sorter?: (a: any, b: any) => number) {
+        handleFilter(selectedValues, onFilter, sorter)
+    }
+
+    function handleReset() {
+        console.log(">> Reset")
     }
 
     return <>
