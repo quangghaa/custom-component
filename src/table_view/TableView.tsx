@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./table_view_style.scss";
 import { ColumnType, SortOrder } from "./types";
 import HeaderView from "./HeadView";
 import ItemView from "./ItemView";
 import { hasChildren } from "./common"
+import Pagination from "./pagination/Pagination.tsx";
 
 const EmptyTableBody = (props: any) => {
     const { colSpan } = props
@@ -20,9 +21,19 @@ interface Props {
     data: any[]
     scroll?: ScrollType
 }
+const PageSize = 2
 export const TableView: React.FC<Props> = (props: any) => {
     const { columns, data, scroll } = props
-    const [dataView, setDataView] = useState<any[]>(data)
+
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const currentTableData = useMemo(() => {
+        const firstPageIndex = (currentPage - 1) * PageSize;
+        const lastPageIndex = firstPageIndex + PageSize;
+        return data.slice(firstPageIndex, lastPageIndex);
+    }, [currentPage]);
+
+    const [dataView, setDataView] = useState<any[]>(currentTableData)
 
     const tableSizeCls: any = { x: "100%", y: "auto" } // default width and height
     if (scroll) {
@@ -31,6 +42,10 @@ export const TableView: React.FC<Props> = (props: any) => {
         if (typeof x === "string") tableSizeCls.x = x
         if (typeof y === "number") tableSizeCls.y = y + "px"
     }
+
+    useEffect(() => {
+        setDataView(currentTableData)
+    }, [currentTableData])
 
     function getTotalColumns(columns: ColumnType<any>[], remainingSum: number = 0) {
         let sum = remainingSum
@@ -46,7 +61,7 @@ export const TableView: React.FC<Props> = (props: any) => {
 
     function handleSort(direction: SortOrder, sorter: (a: any, b: any) => number) {
         if (direction === null) {
-            setDataView(data)
+            setDataView(currentTableData)
         } else {
             const temp = [...dataView]
             const result = direction === "ascending" ? temp.sort(sorter) : temp.sort(sorter).reverse()
@@ -97,6 +112,14 @@ export const TableView: React.FC<Props> = (props: any) => {
                     </tr>
                 </tfoot>
             </table>
+            <Pagination
+                className="pagination-bar"
+                currentPage={currentPage}
+                totalCount={data.length}
+                pageSize={PageSize}
+                onPageChange={page => setCurrentPage(page)}
+            />
+
         </div>
 
     )

@@ -9,7 +9,7 @@ function App() {
       <TableView
         columns={columns}
         data={data}
-        scroll={{ x: "120%", y: 600 }}
+      // scroll={{ x: "120%", y: 600 }}
       />
     </div>
   )
